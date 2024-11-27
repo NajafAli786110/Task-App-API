@@ -6,6 +6,7 @@ import ConnectDB from "./connection.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { restrictToLoggedInUserOnly } from "./middlewares/RestrictToUserOnly.js";
+import bodyParser from "body-parser";
 
 // Dotenv Config
 dotenv.config();
@@ -18,7 +19,7 @@ const PORT = process.env.PORT || 8081;
 ConnectDB();
 
 // Middleware
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(
   cors({
@@ -28,11 +29,6 @@ app.use(
 );
 app.use(express.urlencoded({ extended: false }));
 
-// Router
-app.get("/test", (req, res) => {
-  console.log("Cookies:", req.cookies);
-  res.send("Cookie Test");
-});
 app.use("/tasks", restrictToLoggedInUserOnly, AppTasksRoutes);
 app.use("/api/user", AppUserRoute);
 

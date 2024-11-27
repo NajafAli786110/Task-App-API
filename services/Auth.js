@@ -1,11 +1,14 @@
-const setAndGetCurrUser = new Map();
+const GetAndSetUsersByID = new Map();
 
-function setUser(id, user) {
-  setAndGetCurrUser.set(id, user);
+function setUsers(id, user) {
+  return GetAndSetUsersByID.set(id, user);
 }
 
-function getUser(id) {
-  setAndGetCurrUser.get(id);
+function getUsers(id) {
+  return GetAndSetUsersByID.get(id);
 }
 
-export { setUser, getUser };
+export {
+    getUsers,
+    setUsers,
+}

@@ -1,12 +1,18 @@
+import { getUsers } from "../services/Auth.js";
+
 function restrictToLoggedInUserOnly(req, res, next) {
-  console.log("All Cookies:", req.cookies);
   const userCheck = req.cookies?.userValidate;
 
   if (!userCheck) {
-    console.log("Unauthorized access attempt.");
+    return res.status(401).json({
+      status: false,
+      message: "Unauthorized access attempt. Please log in.",
+    });
   }
 
-  console.log("Valid session:", userCheck);
+  const currentUser = getUsers(userCheck);
+  req.currUser = currentUser
+
   next();
 }
 

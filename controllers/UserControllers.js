@@ -1,7 +1,7 @@
 import AppUsers from "../model/UserModel.js";
 import bcryptjs from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import { setUser } from "../services/Auth.js";
+import { getUsers, setUsers } from "../services/Auth.js";
 
 async function handleCreatedUser(req, res) {
   const { username, user_email, user_password } = req.body;
@@ -17,7 +17,7 @@ async function handleCreatedUser(req, res) {
       user_email: user_email,
       user_password: hashedPassword,
     });
-
+    setUsers(session, newUser);
     res.status(200).json({ message: `User created Successfully ${newUser}` });
   } catch (error) {
     return res
@@ -47,12 +47,11 @@ async function handleLoggedInUser(req, res) {
     if (!decryptPassword) {
       return res.status(400).json({ message: "Password is incorrect!" });
     }
-    const sessionId = uuidv4();
-    setUser(sessionId, LoggedInUser);
-    res.cookie("userValidate", sessionId, {
+    const session = uuidv4();
+    res.cookie("userValidate", session, {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
+      sameSite: "lax",
     });
     return res.status(200).json({ message: "User logged In Successfully" });
   } catch (error) {
